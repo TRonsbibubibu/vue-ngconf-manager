@@ -36,13 +36,13 @@
 </template>
 
 <script>
-import Bus from '../common/Bus'
-import Projects from '../api/projects'
-import Buffer from '../common/Buffer'
+import Bus from '../common/Bus';
+import Projects from '../api/projects';
+import Buffer from '../common/Buffer';
 
 export default {
   name: 'sidebar',
-  data () {
+  data() {
     return {
       projectName: '',
       profileName: '',
@@ -54,102 +54,101 @@ export default {
       addFileVisible: false,
       removeFileVisible: false,
       formKey: '',
-      formValue: ''
-    }
+      formValue: '',
+    };
   },
   methods: {
-    addClick () {
-      this.addFileVisible = true
+    addClick() {
+      this.addFileVisible = true;
     },
-    removeClick () {
-      this.removeFileVisible = true
+    removeClick() {
+      this.removeFileVisible = true;
     },
-    handleNodeClick (obj, node, self) {
+    handleNodeClick(obj, node, self) {
       if (!obj.value) {
-        return
+        return;
       }
-      this.fileKey = obj.label
+      this.fileKey = obj.label;
       Bus.$emit('selectFile', {
         projectName: this.projectName,
         profileName: this.profileName,
         version: this.version,
         fileKey: this.fileKey,
-        value: obj.value
-      })
+        value: obj.value,
+      });
     },
-    cancelAddDialog () {
-      this.addFileVisible = false
-      this.formKey = ''
-      this.formValue = ''
+    cancelAddDialog() {
+      this.addFileVisible = false;
+      this.formKey = '';
+      this.formValue = '';
     },
-    commitAddDialog () {
+    commitAddDialog() {
       if (this.formKey !== '' && this.formValue !== '') {
-        Buffer.addFileChange(this.formKey, this.formValue)
+        Buffer.addFileChange(this.formKey, this.formValue);
         this.$message({
           message: '提交成功！',
-          type: 'success'
-        })
-        this.addFileVisible = false
-        this.formKey = ''
-        this.formValue = ''
+          type: 'success',
+        });
+        this.addFileVisible = false;
+        this.formKey = '';
+        this.formValue = '';
       } else {
         this.$message({
           message: '文本框不能为空',
-          type: 'warning'
-        })
+          type: 'warning',
+        });
       }
     },
-    cancelRemoveDialog () {
-      this.removeFileVisible = false
-      this.formKey = ''
+    cancelRemoveDialog() {
+      this.removeFileVisible = false;
+      this.formKey = '';
     },
-    commitRemoveDialog () {
+    commitRemoveDialog() {
       if (this.formKey !== '') {
-        Buffer.removeFile(this.formKey)
+        Buffer.removeFile(this.formKey);
         this.$message({
           message: '提交成功！',
-          type: 'success'
-        })
-        this.removeFileVisible = false
-        this.formKey = ''
+          type: 'success',
+        });
+        this.removeFileVisible = false;
+        this.formKey = '';
       } else {
         this.$message({
           message: '文本框不能为空',
-          type: 'warning'
-        })
+          type: 'warning',
+        });
       }
-    }
+    },
   },
-  created () {
+  created() {
     Bus.$on('selectVersion', obj => {
-      this.projectName = obj.project
-      this.profileName = obj.profile
-      this.version = obj.version
-      this.currentVersion = obj.currentVersion
-      Projects.getConf(obj.project, obj.profile, obj.version).then(res => {
-        this.data = [parse(res)]
-        this.treeVisible = true
-      })
-
-      function parse (res) {
+      function parse(res) {
         if (!res.dir) {
           return {
             label: res.key,
-            value: res.value
-          }
+            value: res.value,
+          };
         }
-        let nodes = []
+        const nodes = [];
         res.nodes.forEach(node => {
-          nodes.push(parse(node))
-        })
+          nodes.push(parse(node));
+        });
         return {
           label: res.key,
-          children: nodes
-        }
+          children: nodes,
+        };
       }
-    })
-  }
-}
+      this.projectName = obj.project;
+      this.profileName = obj.profile;
+      this.version = obj.version;
+      this.currentVersion = obj.currentVersion;
+      Projects.getConf(obj.project, obj.profile, obj.version).then(res => {
+        this.data = [parse(res)];
+        this.treeVisible = true;
+      });
+    });
+  },
+};
 
 </script>
 

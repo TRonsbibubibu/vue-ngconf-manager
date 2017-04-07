@@ -66,13 +66,13 @@
 </template>
 
 <script>
-import Projects from '../api/projects'
-import Bus from '../common/Bus'
-import Buffer from '../common/Buffer'
+import Projects from '../api/projects';
+import Bus from '../common/Bus';
+import Buffer from '../common/Buffer';
 
 export default {
   name: 'navTop',
-  data () {
+  data() {
     return {
       projectsTableVisible: false,
       profilesTableVisible: false,
@@ -85,120 +85,118 @@ export default {
       projectName: '',
       profileName: '',
       version: '',
-      currentVersion: ''
-    }
+      currentVersion: '',
+    };
   },
   methods: {
-    openProject () {
+    openProject() {
       if (!Buffer.isEmpty()) {
         this.$confirm('此操作将清空缓冲区该文件, 是否继续?', '提示', {
           confirmButtonText: '清除',
           cancelButtonText: '取消',
-          type: 'warning'
+          type: 'warning',
         }).then(() => {
-          let num = Buffer.length
-          Buffer.clear()
+          const num = Buffer.length;
+          Buffer.clear();
           this.$notify({
             title: '清除缓冲区成功',
             message: '清除修改' + num + '条',
-            type: 'success'
-          })
-          this._openProject()
-        }).catch(() => {
-          return
-        })
+            type: 'success',
+          });
+          this._openProject();
+        }).catch();
       } else {
-        this._openProject()
+        this._openProject();
       }
     },
-    _openProject () {
+    _openProject() {
       Projects.getProjectList().then((res) => {
-        this.projects = res
-        this.projectsTableVisible = true
-      })
+        this.projects = res;
+        this.projectsTableVisible = true;
+      });
     },
-    reset () {
-      let num = Buffer.length
-      Buffer.clear()
+    reset() {
+      const num = Buffer.length;
+      Buffer.clear();
       this.$notify({
         title: '清除缓冲区成功',
         message: '清除修改' + num + '条',
-        type: 'success'
-      })
+        type: 'success',
+      });
     },
-    checkBuffer () {
-      this.buffer = Buffer.getBuffer()
-      this.bufferTableVisible = true
+    checkBuffer() {
+      this.buffer = Buffer.getBuffer();
+      this.bufferTableVisible = true;
     },
-    removeBuffer (index) {
-      let node = this.buffer[index]
-      Buffer.removeFileChange(node.key)
-      this.buffer.splice(index, 1)
+    removeBuffer(index) {
+      const node = this.buffer[index];
+      Buffer.removeFileChange(node.key);
+      this.buffer.splice(index, 1);
     },
-    save () {
+    save() {
       if (Buffer.isEmpty()) {
         this.$message({
           message: '没有改动',
-          type: 'warning'
-        })
-        return
+          type: 'warning',
+        });
+        return;
       }
       Projects.copy(this.projectName, this.profileName, this.version).then(res => {
-        let newVersion = res
-        let buffer = Buffer.getBuffer()
-        let deleteFiles = []
-        let setFiles = []
+        const newVersion = res;
+        const buffer = Buffer.getBuffer();
+        const deleteFiles = [];
+        const setFiles = [];
         buffer.forEach((node) => {
           switch (node.type) {
-            case 'set':setFiles.push(node); break
-            case 'remove':deleteFiles.push(node); break
-            default: break
+            case 'set':setFiles.push(node); break;
+            case 'remove':deleteFiles.push(node); break;
+            default: break;
           }
-        })
-        Projects.setFiles(this.projectName, this.profileName, newVersion, setFiles)
-        Projects.removeFiles(this.projectName, this.profileName, newVersion, deleteFiles)
-        Buffer.clear()
+        });
+        Projects.setFiles(this.projectName, this.profileName, newVersion, setFiles);
+        Projects.removeFiles(this.projectName, this.profileName, newVersion, deleteFiles);
+        Buffer.clear();
         this.$message({
           message: '提交成功,新版本号为' + newVersion,
-          type: 'success'
-        })
-      })
+          type: 'success',
+        });
+      });
     },
-    projectRowClick (row, event, col) {
-      this.projectName = row.name
+    projectRowClick(row, event, col) {
+      this.projectName = row.name;
       Projects.getProfiles(row.name).then((res) => {
-        this.profiles = res
-        this.projectsTableVisible = false
-        this.profilesTableVisible = true
-      })
+        this.profiles = res;
+        this.projectsTableVisible = false;
+        this.profilesTableVisible = true;
+      });
     },
-    profileRowClick (row, event, col) {
-      this.profileName = row.name
-      this.currentVersion = row.currentVersion
+    profileRowClick(row, event, col) {
+      this.profileName = row.name;
+      this.currentVersion = row.currentVersion;
       Projects.getVersions(this.projectName, this.profileName).then((res) => {
-        let versions = []
+        const versions = [];
         res.forEach((node) => {
           versions.push({
-            version: node
-          })
-        })
-        this.versions = versions
-        this.profilesTableVisible = false
-        this.versionsTableVisible = true
-      })
+            version: node,
+          });
+        });
+        this.versions = versions;
+        this.profilesTableVisible = false;
+        this.versionsTableVisible = true;
+      });
     },
-    versionRowClick (row, event, col) {
-      this.version = row.version
-      this.versionsTableVisible = false
+    versionRowClick(row, event, col) {
+      this.version = row.version;
+      this.versionsTableVisible = false;
       Bus.$emit('selectVersion', {
         project: this.projectName,
         profile: this.profileName,
         version: this.version,
-        currentVersion: this.currentVersion
-      })
-    }
-  }
-}
+        currentVersion: this.currentVersion,
+      });
+    },
+  },
+};
 </script>
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>

@@ -3,76 +3,71 @@
  */
 
 class Buffer {
-  constructor () {
-    this.length = 0
-    this.$buffer = {}
+  constructor() {
+    this.length = 0;
+    this.$buffer = {};
   }
-
-  addFileChange (fileKey, value) {
+  addFileChange(fileKey, value) {
     if (fileKey.substr(0, 1) !== '/') {
-      fileKey = '/' + fileKey
+      fileKey = '/' + fileKey;
     }
     if (!this.containFileKey(fileKey)) {
-      this.length++
+      this.length += 1;
     }
     this.$buffer[fileKey] = {
       key: fileKey,
-      value: value,
-      type: 'set'
-    }
-    this.print()
+      value,
+      type: 'set',
+    };
+    this.print();
   }
-  removeFileChange (fileKey) {
+  removeFileChange(fileKey) {
     if (fileKey.substr(0, 1) !== '/') {
-      fileKey = '/' + fileKey
+      fileKey = '/' + fileKey;
     }
     if (this.containFileKey(fileKey)) {
-      delete this.$buffer[fileKey]
-      this.length--
+      delete this.$buffer[fileKey];
+      this.length += 1;
     }
   }
-  removeFile (fileKey) {
+  removeFile(fileKey) {
     if (fileKey.substr(0, 1) !== '/') {
-      fileKey = '/' + fileKey
+      fileKey = '/' + fileKey;
     }
     if (!this.containFileKey(fileKey)) {
-      this.length++
+      this.length += 1;
     }
     this.$buffer[fileKey] = {
       key: fileKey,
-      type: 'remove'
-    }
-    this.print()
+      type: 'remove',
+    };
+    this.print();
   }
-  getFileChange (fileKey) {
+  getFileChange(fileKey) {
     if (fileKey.substr(0, 1) !== '/') {
-      fileKey = '/' + fileKey
+      fileKey = '/' + fileKey;
     }
-    return this.$buffer[fileKey]
+    return this.$buffer[fileKey];
   }
-  containFileKey (fileKey) {
+  containFileKey(fileKey) {
     if (fileKey.substr(0, 1) !== '/') {
-      fileKey = '/' + fileKey
+      fileKey = '/' + fileKey;
     }
-    return (fileKey in this.$buffer)
+    return (fileKey in this.$buffer);
   }
-  isEmpty () {
-    return this.length === 0
+  isEmpty() {
+    return this.length === 0;
   }
-  print () {
-    console.log(this.$buffer)
+  // print() {
+  //   console.log(this.$buffer);
+  // }
+  getBuffer() {
+    return Object.values(this.$buffer);
   }
-  getBuffer () {
-    let arr = []
-    for (let key in this.$buffer) {
-      arr.push(this.$buffer[key])
-    }
-    return arr
-  }
-  clear () {
-    this.length = 0
-    this.$buffer = {}
+  clear() {
+    this.length = 0;
+    this.$buffer = {};
   }
 }
 
-export default new Buffer()
+export default new Buffer();

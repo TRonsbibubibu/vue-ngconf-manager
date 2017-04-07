@@ -10,18 +10,18 @@
 </template>
 
 <script>
-import navTop from './Nav'
-import sidebar from './Sidebar'
-import editor from './Editor'
+import navTop from './Nav.vue';
+import sidebar from './Sidebar.vue';
+import editor from './Editor.vue';
 
 export default {
   name: 'app',
   components: {
     sidebar,
     navTop,
-    editor
-  }
-}
+    editor,
+  },
+};
 </script>
 
 <style>

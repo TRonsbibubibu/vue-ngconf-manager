@@ -19,12 +19,12 @@
 </template>
 
 <script>
-import Bus from '../common/Bus'
-import Buffer from '../common/Buffer'
+import Bus from '../common/Bus';
+import Buffer from '../common/Buffer';
 
 export default {
   name: 'editor',
-  data () {
+  data() {
     return {
       editorVisible: false,
       projectName: '',
@@ -32,45 +32,45 @@ export default {
       version: '',
       oldValue: '',
       newValue: '',
-      fileKey: ''
-    }
+      fileKey: '',
+    };
   },
   methods: {
-    resetForm () {
-      this.newValue = ''
+    resetForm() {
+      this.newValue = '';
     },
-    submitForm () {
+    submitForm() {
       if (this.newValue !== '') {
-        Buffer.addFileChange(this.fileKey, this.newValue)
+        Buffer.addFileChange(this.fileKey, this.newValue);
         this.$message({
           message: '提交成功！',
-          type: 'success'
-        })
+          type: 'success',
+        });
       } else {
         this.$message({
           message: '文本框不能为空',
-          type: 'warning'
-        })
+          type: 'warning',
+        });
       }
-    }
+    },
   },
-  created () {
+  created() {
     Bus.$on('selectFile', obj => {
-      this.fileKey = obj.fileKey
-      this.oldValue = obj.value
-      this.version = obj.version
-      this.projectName = obj.projectName
-      this.profileName = obj.profileName
+      this.fileKey = obj.fileKey;
+      this.oldValue = obj.value;
+      this.version = obj.version;
+      this.projectName = obj.projectName;
+      this.profileName = obj.profileName;
 
       if (Buffer.containFileKey(this.fileKey)) {
-        this.newValue = Buffer.getFileChange(this.fileKey).value
+        this.newValue = Buffer.getFileChange(this.fileKey).value;
       } else {
-        this.newValue = ''
+        this.newValue = '';
       }
-      this.editorVisible = true
-    })
-  }
-}
+      this.editorVisible = true;
+    });
+  },
+};
 
 </script>
 
